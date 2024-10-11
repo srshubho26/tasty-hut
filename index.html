@@ -71,7 +71,22 @@
     </header>
     
     <main class="bg-white px-2 py-32">
-        <h2 id="dish-title" class="text-main text-center mb-10 text-4xl font-semibold">Your Favourite Food</h2>
+        <div class="sm:grid grid-cols-2 justify-center sm:justify-between items-center max-w-screen-xl mx-auto mb-10 text-center">
+            <h2 id="dish-title" class="sm:text-left text-main text-2xl lg:text-4xl font-semibold mb-2 sm:mb-0">Your Favourite Food</h2>
+
+            <div id="cat-container" class="dropdown dropdown-bottom dropdown-end font-bold text-title w-full hidden">
+                <div tabindex="0" role="button" class="w-full border border-desc p-2 rounded-md m-1 bg-color-btn flex justify-between items-center">
+                    <span>Select category to filter</span>
+                    <img src="./img/caret-down.png">
+                </div>
+
+                <div id="cat-elements" tabindex="0" class="menu dropdown-content rounded-md z-[1] w-full left-1 grid grid-cols-2 lg:grid-cols-4 border border-desc top-14 bg-white gap-2"></div>
+            </div>
+
+            <div id="cat-loader">
+                <span class="loading loading-spinner loading-lg"></span>
+            </div>
+        </div>
 
         <div id="dishes" class="grid sm:grid-cols-2 gap-6 max-w-screen-xl mx-auto">
         </div>

@@ -1,20 +1,21 @@
-const loadData = async (callback, loaderId, containerId, url="search.php?s=") => {
+const loadData = async (callback, loaderId, containerId, url="search.php?s=", isCat) => {
     document.getElementById(loaderId).classList.remove("hidden");
     document.getElementById(containerId).classList.add("hidden");
     const response = await fetch(`https://www.themealdb.com/api/json/v1/1/${url}`);
     const data = await response.json();
-    callback(data.meals);
+    callback(isCat ? data.categories : data.meals);
 }
 
 const displayMeals = data => {
     let formatedData = "";
     data && data.forEach(el=>{
+        const desc = el.strInstructions;
         formatedData += `<div class="border rounded-lg md:flex max-w-sm sm:max-w-full mx-auto">
                 <img class="md:w-1/2 rounded-lg md:rounded-none md:rounded-l-lg" src="${el.strMealThumb}">
 
                 <div class="md:w-1/2 p-3 lg:px-6 flex flex-col justify-center items-start">
                     <h4 class="text-title text-lg lg:text-2xl font-bold">${el.strMeal}</h4>
-                    <p class="text-desc text-lg py-2 lg:py-4">${el.strInstructions.substr(0, 80)}...</p>
+                    ${desc ? `<p class="text-desc text-lg py-2 lg:py-4">${desc.substr(0, 80)}...</p>` : ""}
                     <button data-id="${el.idMeal}" class="text-color-btn font-semibold text-lg">View Details</button>
                 </div>
             </div>`
@@ -38,14 +39,37 @@ const displaySingle = data => {
     document.getElementById("cat").textContent = prop.strCategory;
     document.getElementById("area").textContent = prop.strArea;
     document.getElementById("instruction").textContent = prop.strInstructions;
-    document.getElementById("youtube").textContent = prop.strYoutube;
+    const yt = prop.strYoutube;
+    document.getElementById("youtube").innerHTML = yt ? `<a target="_blank" class="px-2 py-1 rounded-md bg-color-btn" href="${yt}">Click here to watch on youtube.</a>` : "N/A";
     document.getElementById("single-dish-title").textContent = prop.strMeal;
 
     document.getElementById("single-data-loader").classList.add("hidden");
     document.getElementById("single-data").classList.remove("hidden");
 }
 
-loadData(displayMeals, "dish-loader", "dishes");
+const displayCat = data => {
+    document.getElementById("cat-loader").classList.add("hidden");
+    document.getElementById("cat-container").classList.remove("hidden");
+
+    let = dropdownItems = "";
+    data && data.forEach(el=>{
+        dropdownItems += `<div data-cat="${el.strCategory}" class="border border-desc rounded-md p-2 bg-color-btn cursor-pointer cat">
+            <img data-cat="${el.strCategory}" class="p-1 border border-title rounded-full mb-2 w-20 h-20 mx-auto object-cover" src="${el.strCategoryThumb}">
+            <span data-cat="${el.strCategory}">${el.strCategory}</span>
+        </div>`
+    });
+
+    if(!dropdownItems)dropdownItems = "<p>No category available!</p>";
+
+    document.getElementById("cat-elements").innerHTML = dropdownItems;
+}
+
+const loadCatAfterDish = async()=>{
+    await loadData(displayMeals, "dish-loader", "dishes");
+    loadData(displayCat, "cat-loader", "cat-container", "categories.php", true);
+}
+
+loadCatAfterDish();
 
 document.getElementById("dishes").addEventListener("click", e=>{
     const target = e.target;
@@ -60,4 +84,21 @@ document.getElementById("search-form").addEventListener("submit", e=>{
     if(!srchTxt)return;
     loadData(displayMeals, "dish-loader", "dishes", `search.php?s=${srchTxt}`);
     window.location.href = "#dish-title";
-})
+});
+
+document.getElementById("cat-elements").addEventListener("click", e=>{
+    let target = e.target;
+    const catId = target.getAttribute("data-cat");
+    if(!catId || target.classList.contains("bg-stone-300"))return;
+    loadData(displayMeals, "dish-loader", "dishes", `filter.php?c=${catId}`);
+    if(!target.classList.contains("cat"))target = target.parentNode;
+    const currActive = document.querySelector(".cat.bg-stone-300");
+    if(currActive){
+        currActive.classList.remove("bg-stone-300");
+        currActive.classList.add("bg-color-btn");
+    }
+    target.classList.add("bg-stone-300");
+    target.classList.remove("bg-color-btn");
+
+    document.getElementById("cat-elements").blur();
+});
