@@ -15,8 +15,8 @@ const displayMeals = data => {
 
                 <div class="md:w-1/2 p-3 lg:px-6 flex flex-col justify-center items-start">
                     <h4 class="text-title text-lg lg:text-2xl font-bold">${el.strMeal}</h4>
-                    ${desc ? `<p class="text-desc text-lg py-2 lg:py-4">${desc.substr(0, 80)}...</p>` : ""}
-                    <button data-id="${el.idMeal}" class="text-color-btn font-semibold text-lg">View Details</button>
+                    ${desc ? `<p class="text-desc text-lg pt-2 lg:pt-4">${desc.substr(0, 80)}...</p>` : ""}
+                    <button data-id="${el.idMeal}" class="mt-2 lg:mt-4 px-4 py-2 rounded bg-color-btn font-semibold text-lg">View Details</button>
                 </div>
             </div>`
     });
