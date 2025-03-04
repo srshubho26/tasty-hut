@@ -1,2 +1,2 @@
 Live preview at <br>
-https://shuvo22890.github.io/tasty-hut/
+https://srshubho26.github.io/tasty-hut/

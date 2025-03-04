@@ -102,3 +102,16 @@ document.getElementById("cat-elements").addEventListener("click", e=>{
 
     document.getElementById("cat-elements").blur();
 });
+
+
+
+let str = 'almans rahsmassssssssn shuvo';
+let count = 0;
+console.log(str.slice(str.indexOf('s'), str.lastIndexOf('s')+1))
+let i=5;
+for( i in str){
+    console.log(i)
+}
+
+
+console.log(str.split('s').length-1)
